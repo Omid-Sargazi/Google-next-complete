@@ -6,10 +6,31 @@ import { useRouter } from 'next/navigation'
 const HomeSearch = () => {
     const [input, setInput] = useState("")
     const router = useRouter()
+    const [randomSearchLoading, setRandomSearchLoading] = useState(false);
     const handleSubmit = (e)=>{
         e.preventDefault()
         if(!input.trim()) return;
         router.push(`/search/web?searchTerm=${input}`)
+    }
+    const randomSearch =async ()=>  {
+        setRandomSearchLoading(true);
+        const url = "https://api.api-ninjas.com/v1/randomword";
+        await fetch(url, {
+            method:"GET",
+            headers:{
+            "Content-Type": "application/json",
+            "X-Api-Key": "Rvj1NbOklsnnlq/SVGhZtw==IrEgJHm84FopXsLw",
+            origin:"no-origin",
+            },
+        }).then(res=>{
+            return res.json()
+        }).then(data=>{
+            if(!data.word) return;
+            return data.word;
+        }).then(data=>{
+            router.push(`/search/web?searchTerms=${data}`);
+        })
+        setRandomSearchLoading(false);
     }
   return (
     <>
@@ -22,10 +43,10 @@ const HomeSearch = () => {
       </form>
       <div className=' flex flex-col space-y-2 sm:space-y-0 justify-center sm:flex-row mt-8 sm:space-x-4'>
         <button onClick={handleSubmit} className='bg-[#f8f9fa] rounded-md text-sm text-gray-800 hover:ring-gray-200 focus:outline-none active:ring-gray-300 hover:shadow-md w-36 h-10 transition-shadow'>Google Search</button>
-        <button className='bg-[#f8f9fa] rounded-md text-sm text-gray-800 hover:ring-gray-200 focus:outline-none active:ring-gray-300 hover:shadow-md w-36 h-10 transition-shadow'>I am Feeling Lucky</button>
+        <button disabled={randomSearchLoading} onClick={randomSearch} className=' disabled:opacity-80 disabled:shadow-sm bg-[#f8f9fa] rounded-md text-sm text-gray-800 hover:ring-gray-200 focus:outline-none active:ring-gray-300 hover:shadow-md w-36 h-10 transition-shadow'>{randomSearchLoading? "Loading":` I am Feeling Lucky`}</button>
       </div>
     </>
   )
 }
-
+5938
 export default HomeSearch

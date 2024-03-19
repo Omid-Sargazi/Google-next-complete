@@ -13,6 +13,8 @@ const Home = () => {
           alt="Google Logo"
           width={200}
           height={100}
+          priority
+          style={{ width: "auto" }}
         />
         <HomeSearch />
       </div>
